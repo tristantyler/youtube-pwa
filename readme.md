@@ -1,3 +1,2 @@
-# Repository for class project
-
-This readme is a placeholder that should be replaced
+npm run build should build the project.
+npm start should start a local development server and serve the built project without errors.
