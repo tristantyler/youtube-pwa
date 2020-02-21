@@ -11,7 +11,7 @@ export class PhotoItem extends Component {
         <div className="row">
          <div className="col-8">
              <Link onClick={this.props.getSelect.bind(this, category, id, psrc)}
-               to="/select" ><img src={psrc} className="img-fluid img-thumbnail rounded float-left" alt={id}/>
+               to={`/select/${this.props.photo.id}`}><img src={psrc} className="img-fluid img-thumbnail rounded float-left" alt={id}/>
              </Link>
          </div>
         </div>

@@ -27,10 +27,6 @@ class App extends Component {
   }
 
 
-  capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
-
   // Categories
   getCategory = (category) => {
     if (category === "all"){
@@ -40,7 +36,7 @@ class App extends Component {
         photo.category === category)]});
     }
     this.setTab('category')
-    document.title = "Categories | " + this.capitalizeFirstLetter(category)
+    document.title = "Categories | " + category
   }
 
   // Select
@@ -98,13 +94,13 @@ class App extends Component {
                 </React.Fragment>
               </div>
             )} />
-          <Route exact path="/select" render={props => (
+          <Route exact path="/select/:id" render={props => (
             <div>
               <Helmet>
                 <title>Photo Select</title>
               </Helmet>
               <React.Fragment>
-                <PhotoSelect photo={this.state.photoselect}  />
+                <PhotoSelect {...props} photos={this.state.photos}  />
               </React.Fragment>
             </div>
             )} />
