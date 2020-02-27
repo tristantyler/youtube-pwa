@@ -28,7 +28,6 @@ class App extends Component {
 
   // Set Tab
   setTab = (tab) => {
-    console.log("set Tab", tab)
     this.setState(prevState => ({
       tabselect: {
         ...prevState.tabselect,
