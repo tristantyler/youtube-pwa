@@ -1,17 +1,22 @@
 import React, { Component } from 'react'
+import data from '../data.json';
 
 export class PhotoSelect extends Component {
+
+  loadData = JSON.parse(JSON.stringify(data));
 
   constructor(props) {
     super(props)
     this.state = {
       loaded: false,
-      photo: {}
+      photo: {},
+      photos: []
     }
   }
 
   async componentDidMount() {
-      const photo = await this.props.photos.filter(photo => photo.id === this.props.match.params.id);
+      await this.setState({photos: [...this.loadData]});
+      const photo = await this.state.photos.filter(photo => photo.id === this.props.match.params.id);
 
       this.setState({loaded: true})
       for(var prop in photo) {
@@ -30,8 +35,8 @@ export class PhotoSelect extends Component {
         <div className="row">
         <div className="col-5">
           <div className="list-group-fluid">
-            <div className="list-group-item list-group-item-action"><h5>Width:</h5> 600</div>
-            <div className="list-group-item list-group-item-action"><h5>Height:</h5> 400</div>
+            <div className="list-group-item list-group-item-action"><h5>Width:</h5> {this.state.photo.w} </div>
+            <div className="list-group-item list-group-item-action"><h5>Height:</h5> {this.state.photo.h} </div>
             <div className="list-group-item list-group-item-action"><h5>Category:</h5> {this.state.photo.category}</div>
           </div>
         </div>
