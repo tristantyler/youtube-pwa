@@ -2,10 +2,10 @@ import React, {Component} from 'react';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 import Photos from './components/Photos';
 import Header from './components/layout/Header';
-import FilterHeader from './components/layout/FilterHeader';
 import PhotoSelect from './components/PhotoSelect';
 import Categories from './components/Categories'
 import {Helmet} from 'react-helmet';
+import { Container, Col } from 'react-bootstrap';
 
 import data from './data.json';
 
@@ -39,14 +39,13 @@ class App extends Component {
   render() {
 
     return (<Router>
-      <div className="App">
-        <Header setTab={this.setTab} tabselect={this.state.tabselect}/>
-        <div className="container-fluid">
+      <Container fluid >
+        <Header setTab={this.setTab} />
+        <Col sm>
           <Route exact="exact" path="/" render={props => (<div>
               <Helmet>
                 <title>Home | Recent</title>
               </Helmet>
-              <FilterHeader setTab={this.setTab}/>
               <React.Fragment>
                 <Photos photos={this.state.photos}/>
               </React.Fragment>
@@ -55,7 +54,6 @@ class App extends Component {
               <Helmet>
                 <title>Categories</title>
               </Helmet>
-              <FilterHeader setTab={this.setTab}/>
               <React.Fragment>
                 <Categories {...props} key={this.state.tabselect.tab}/>
               </React.Fragment>
@@ -68,8 +66,8 @@ class App extends Component {
                 <PhotoSelect {...props} tabselect={this.state.tabselect}/>
               </React.Fragment>
             </div>)}/>
-        </div>
-      </div>
+        </Col>
+      </Container>
     </Router>);
   }
 }
