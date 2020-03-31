@@ -1,6 +1,11 @@
-<hr/>
-<h2>Build Instructions</h2>
-  <ol>
-    <li>'npm run build' should build the project</li>
-    <li>'npm start' should start a local development server and serve the built project without errors</li>
-  </ol>
+### `npm install`
+
+Installs necessary dependencies
+
+### `npm start`
+
+Runs the app in the development mode.<br />
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+The page will reload if you make edits.<br />
+
