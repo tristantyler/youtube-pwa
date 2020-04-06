@@ -6,18 +6,22 @@ export class PhotoSelect extends Component {
 
   loadData = JSON.parse(JSON.stringify(data));
 
+
   constructor(props) {
     super(props)
     this.state = {
       loaded: false,
+
       photo: {},
       photos: []
     }
   }
 
   async componentDidMount() {
+
       await this.setState({photos: [...this.loadData]});
       const photo = await this.state.photos.filter(photo => photo.id === this.props.match.params.id);
+
 
       this.setState({loaded: true})
       for(var prop in photo) {
@@ -27,6 +31,7 @@ export class PhotoSelect extends Component {
 
   content () {
     return(
+
       <div>
         <Row>
          <Col>
@@ -43,6 +48,7 @@ export class PhotoSelect extends Component {
           </Col>
         </Row>
     </div>
+
     )
   }
 

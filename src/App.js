@@ -7,6 +7,7 @@ import Categories from './components/Categories'
 import {Helmet} from 'react-helmet';
 import { Container, Col } from 'react-bootstrap';
 
+
 import data from './data.json';
 
 class App extends Component {
@@ -14,6 +15,7 @@ class App extends Component {
   loadData = JSON.parse(JSON.stringify(data));
 
   state = {
+
     photos: [],
     tabselect: {
       tab: 'home'
@@ -28,6 +30,7 @@ class App extends Component {
 
   // Set Tab
   setTab = (tab) => {
+
     this.setState(prevState => ({
       tabselect: {
         ...prevState.tabselect,
@@ -59,6 +62,7 @@ class App extends Component {
               </React.Fragment>
             </div>)}/>
           <Route exact="exact" path="/select/:id" render={props => (<div>
+
               <Helmet>
                 <title>Photo Select</title>
               </Helmet>
