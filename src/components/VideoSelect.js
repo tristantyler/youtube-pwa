@@ -1,13 +1,6 @@
 import React, { Component } from 'react'
 import {Row, Col, ListGroup} from 'react-bootstrap';
 
-const API = ""
-const channelID = "UCBY5hSLBKHpaVLo61cN7tJA"
-// const channelID = "UC4a-Gbdw7vOaccHmFo40b9g"
-const result = 50;
-
-var finalURL = `https://www.googleapis.com/youtube/v3/search?key=${API}&channelId=${channelID}&part=snippet,id&order=date&maxResults=${result}`
-
 export class VideoSelect extends Component {
 
   constructor(props) {
@@ -20,28 +13,22 @@ export class VideoSelect extends Component {
   }
 
   async componentDidMount(){
-    const urli = finalURL;
-    const response = await fetch(urli);
-    const data = await response.json();
-
-    const videos = data.items.map(obj => obj = {
-      id: obj.id.videoId,
-      url: "https://www.youtube.com/watch?v="+obj.id.videoId,
-      image: obj.snippet.thumbnails.high.url,
-      title: obj.snippet.title,
-      channel: obj.snippet.channelTitle,
-    })
+    const videos = await JSON.parse(localStorage.getItem('videos'))
     this.setState({videos})
 
     var i = 0
+    var found = false
     for(i; i < this.state.videos.length; i++){
         if(this.state.videos[i].id === this.props.match.params.id){
+          found = true
           break;
        }
      }
 
-    const video = this.state.videos[i]
-    this.setState({video})
+    if (found){
+      const video = this.state.videos[i]
+      this.setState({video})
+    }
 
     this.setState({loaded: true})
   }

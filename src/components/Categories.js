@@ -1,13 +1,7 @@
 import React, {Component} from 'react'
 import VideoItem from './VideoItem'
 
-const API = ""
-const channelID = "UCBY5hSLBKHpaVLo61cN7tJA"
-// const channelID = "UC4a-Gbdw7vOaccHmFo40b9g"
-const result = 50;
-
-var finalURL = `https://www.googleapis.com/youtube/v3/search?key=${API}&channelId=${channelID}&part=snippet,id&order=date&maxResults=${result}`
-var playURL = `https://www.googleapis.com/youtube/v3/playlists?key=${API}&channelId=${channelID}&part=snippet&regionCode=US&maxResults=${result}`
+const API = process.env.REACT_APP_GOOGLE_API_KEY
 
 export class Categories extends Component {
 
@@ -16,37 +10,31 @@ export class Categories extends Component {
     this.state = {
       loaded: false,
       videos: [],
+      playlists: [],
     }
+  }
+
+  async getVideos(){
+    const videos = await JSON.parse(localStorage.getItem('videos'))
+    this.setState({videos})
+
+    const playlists = await JSON.parse(localStorage.getItem('playlists'))
+    this.setState({playlists})
   }
 
   async shouldComponentUpdate(nextProps, nextState) {
     if (this.props.match.params.id !== nextProps.match.params.id) {
+      await this.getVideos()
 
-      const urlsa = playURL;
-      const responses = await fetch(urlsa);
-      const datas = await responses.json();
-      const playlists = datas.items.map(obj => obj.snippet.title)
-
-      if (this.props.match.params.id === 'all') {
-          const url = finalURL;
-          const response = await fetch(url);
-          const data = await response.json();
-
-          const videos = data.items.map(obj => obj = {
-            id: obj.id.videoId,
-            url: "https://www.youtube.com/watch?v="+obj.id.videoId,
-            image: obj.snippet.thumbnails.high.url,
-          })
-          this.setState({videos})
-
-        } else {
+      if (nextProps.match.params.id !== 'all') {
           var i = 0
-          for(i; i < playlists.length; i++){
-              if(this.props.match.params.id === playlists[i]){
-                var pi = datas.items[i].id
+          for(i; i < this.state.playlists.length; i++){
+              if(nextProps.match.params.id === this.state.playlists[i].title){
+                var pi = this.state.playlists[i].id
                 const url = `https://www.googleapis.com/youtube/v3/playlistItems?key=${API}&part=snippet&playlistId=${pi}`
                 const response = await fetch(url);
                 const data = await response.json();
+                console.log("Category API called: Other", this.state.playlists[i].title)
 
                 const videos = data.items.map(obj => obj = {
                   id:obj.snippet.resourceId.videoId,
@@ -68,31 +56,17 @@ export class Categories extends Component {
   }
 
   async componentDidMount(){
-    const urlsa = playURL;
-    const responses = await fetch(urlsa);
-    const datas = await responses.json();
-    const playlists = datas.items.map(obj => obj.snippet.title)
-
-    if (this.props.match.params.id === 'all') {
-        const url = finalURL;
-        const response = await fetch(url);
-        const data = await response.json();
-
-        const videos = data.items.map(obj => obj = {
-          id: obj.id.videoId,
-          url: "https://www.youtube.com/watch?v="+obj.id.videoId,
-          image: obj.snippet.thumbnails.high.url,
-        })
-        this.setState({videos})
-
-      } else {
+    await this.getVideos()
+    if (this.props.match.params.id !== 'all') {
         var i = 0
-        for(i; i < playlists.length; i++){
-            if(this.props.match.params.id === playlists[i]){
-              var pi = datas.items[i].id
+        for(i; i < this.state.playlists.length; i++){
+            if(this.props.match.params.id === this.state.playlists[i].title){
+              var pi = this.state.playlists[i].id
               const url = `https://www.googleapis.com/youtube/v3/playlistItems?key=${API}&part=snippet&playlistId=${pi}`
               const response = await fetch(url);
               const data = await response.json();
+
+              console.log("Category API called: Other", this.state.playlists[i].title)
 
               const videos = data.items.map(obj => obj = {
                 id:obj.snippet.resourceId.videoId,
@@ -108,6 +82,7 @@ export class Categories extends Component {
 
       this.setState({loaded: true})
   }
+
 
   content() {
     return this.state.videos.map((vid, i) => (
