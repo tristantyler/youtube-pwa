@@ -1,65 +1,118 @@
 import React, {Component} from 'react'
-import PhotoItem from './PhotoItem'
-import data from '../data.json';
+import VideoItem from './VideoItem'
+
+const API = "AIzaSyCvRiuQQ2t760UDpI6yd1nF9tlP0tDoERg"
+const channelID = "UCBY5hSLBKHpaVLo61cN7tJA"
+// const channelID = "UC4a-Gbdw7vOaccHmFo40b9g"
+const result = 50;
+
+var finalURL = `https://www.googleapis.com/youtube/v3/search?key=${API}&channelId=${channelID}&part=snippet,id&order=date&maxResults=${result}`
+var playURL = `https://www.googleapis.com/youtube/v3/playlists?key=${API}&channelId=${channelID}&part=snippet&regionCode=US&maxResults=${result}`
 
 export class Categories extends Component {
 
-
-
   constructor(props) {
     super(props)
-    this.loadData = JSON.parse(JSON.stringify(data));
     this.state = {
       loaded: false,
-      photo: {},
-      photos: []
+      videos: [],
     }
   }
 
   async shouldComponentUpdate(nextProps, nextState) {
     if (this.props.match.params.id !== nextProps.match.params.id) {
 
-      this.setState({loaded: false})
-      await this.setState({
-        photos: [...this.loadData]
-      });
-      if (this.props.match.params.id === 'all') {
-        await this.setState({
-          photo: [...this.state.photos]
-        });
-      } else {
-        await this.setState({
-          photo: [...this.state.photos.filter(photo => photo.category.toLowerCase() === this.props.match.params.id)]
-        });
-      }
+      const urlsa = playURL;
+      const responses = await fetch(urlsa);
+      const datas = await responses.json();
+      const playlists = datas.items.map(obj => obj.snippet.title)
 
-      this.setState({loaded: true})
+      if (this.props.match.params.id === 'all') {
+          const url = finalURL;
+          const response = await fetch(url);
+          const data = await response.json();
+
+          const videos = data.items.map(obj => obj = {
+            id: obj.id.videoId,
+            url: "https://www.youtube.com/watch?v="+obj.id.videoId,
+            image: obj.snippet.thumbnails.high.url,
+          })
+          this.setState({videos})
+
+        } else {
+          var i = 0
+          for(i; i < playlists.length; i++){
+              if(this.props.match.params.id === playlists[i]){
+                var pi = datas.items[i].id
+                const url = `https://www.googleapis.com/youtube/v3/playlistItems?key=${API}&part=snippet&playlistId=${pi}`
+                const response = await fetch(url);
+                const data = await response.json();
+
+                const videos = data.items.map(obj => obj = {
+                  id:obj.snippet.resourceId.videoId,
+                  url: "https://www.youtube.com/watch?v="+obj.snippet.resourceId.videoId,
+                  image: obj.snippet.thumbnails.high.url,
+                })
+                this.setState({videos})
+
+                break;
+             }
+           }
+        }
+
+        this.setState({loaded: true})
       return true;
     }
 
     return false;
   }
 
-  async componentDidMount() {
-    await this.setState({
-      photos: [...this.loadData]
-    });
+  async componentDidMount(){
+    const urlsa = playURL;
+    const responses = await fetch(urlsa);
+    const datas = await responses.json();
+    const playlists = datas.items.map(obj => obj.snippet.title)
+
     if (this.props.match.params.id === 'all') {
-      await this.setState({
-        photo: [...this.state.photos]
-      });
-    } else {
-      await this.setState({
-        photo: [...this.state.photos.filter(photo => photo.category.toLowerCase() === this.props.match.params.id)]
-      });
-    }
+        const url = finalURL;
+        const response = await fetch(url);
+        const data = await response.json();
 
-    this.setState({loaded: true})
+        const videos = data.items.map(obj => obj = {
+          id: obj.id.videoId,
+          url: "https://www.youtube.com/watch?v="+obj.id.videoId,
+          image: obj.snippet.thumbnails.high.url,
+        })
+        this.setState({videos})
 
+      } else {
+        var i = 0
+        for(i; i < playlists.length; i++){
+            if(this.props.match.params.id === playlists[i]){
+              var pi = datas.items[i].id
+              const url = `https://www.googleapis.com/youtube/v3/playlistItems?key=${API}&part=snippet&playlistId=${pi}`
+              const response = await fetch(url);
+              const data = await response.json();
+
+              const videos = data.items.map(obj => obj = {
+                id:obj.snippet.resourceId.videoId,
+                url: "https://www.youtube.com/watch?v="+obj.snippet.resourceId.videoId,
+                image: obj.snippet.thumbnails.high.url,
+              })
+              this.setState({videos})
+
+              break;
+           }
+         }
+      }
+
+      this.setState({loaded: true})
   }
 
   content() {
-    return this.state.photo.map((photo) => (<PhotoItem key={photo.id} photo={photo} />));
+    return this.state.videos.map((vid, i) => (
+      <VideoItem key={vid.id} video={vid}/>
+    ));
   }
 
   render() {
