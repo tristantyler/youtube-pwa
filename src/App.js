@@ -29,7 +29,7 @@ class App extends Component {
     const url = finalURL;
     const response = await fetch(url);
     const data = await response.json();
-    console.log("APP API called", data)
+    // console.log("APP API called", data)
     const videos = data.items.map(obj => obj = {
       id: obj.id.videoId,
       url: "https://www.youtube.com/watch?v="+obj.id.videoId,
@@ -43,7 +43,7 @@ class App extends Component {
     const urlp = playURL;
     const responsep = await fetch(urlp);
     const datap = await responsep.json();
-    console.log("Header API Called")
+    // console.log("Header API Called")
     const playlists = datap.items.map(obj => obj ={
       title: obj.snippet.title,
       id: obj.id

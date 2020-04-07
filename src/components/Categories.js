@@ -34,7 +34,7 @@ export class Categories extends Component {
                 const url = `https://www.googleapis.com/youtube/v3/playlistItems?key=${API}&part=snippet&playlistId=${pi}`
                 const response = await fetch(url);
                 const data = await response.json();
-                console.log("Category API called: Other", this.state.playlists[i].title)
+                // console.log("Category API called: Other", this.state.playlists[i].title)
 
                 const videos = data.items.map(obj => obj = {
                   id:obj.snippet.resourceId.videoId,
@@ -66,7 +66,7 @@ export class Categories extends Component {
               const response = await fetch(url);
               const data = await response.json();
 
-              console.log("Category API called: Other", this.state.playlists[i].title)
+              // console.log("Category API called: Other", this.state.playlists[i].title)
 
               const videos = data.items.map(obj => obj = {
                 id:obj.snippet.resourceId.videoId,
