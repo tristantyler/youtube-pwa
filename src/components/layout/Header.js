@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {Link} from 'react-router-dom';
 import {Navbar, Nav, NavDropdown} from 'react-bootstrap';
 
-const API = "AIzaSyCvRiuQQ2t760UDpI6yd1nF9tlP0tDoERg"
+const API = ""
 const channelID = "UCBY5hSLBKHpaVLo61cN7tJA"
 // const channelID = "UC4a-Gbdw7vOaccHmFo40b9g"
 const result = 50;
