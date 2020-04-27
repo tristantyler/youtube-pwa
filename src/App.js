@@ -1,10 +1,12 @@
-import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import React, {Component} from 'react';
+import {BrowserRouter as Router, Route} from 'react-router-dom';
 import Photos from './components/Photos';
 import Header from './components/layout/Header';
-import FilterHeader from './components/layout/FilterHeader';
 import PhotoSelect from './components/PhotoSelect';
-import { Helmet } from 'react-helmet';
+import Categories from './components/Categories'
+import {Helmet} from 'react-helmet';
+import { Container, Col } from 'react-bootstrap';
+
 
 import data from './data.json';
 
@@ -13,101 +15,64 @@ class App extends Component {
   loadData = JSON.parse(JSON.stringify(data));
 
   state = {
-    photos: [ ],
-    photocopy: [ ],
-    photoselect:{ },
-    tabselect: { tab: 'home' },
-  }
 
-  componentDidMount(){
-    this.setState({photos: [...this.loadData]});
-    this.setState({photocopy: [...this.loadData]});
-    this.setState({photoselect: [...this.state.photos.filter( photo =>
-      photo.id === 1)]});
-  }
-
-
-  // Categories
-  getCategory = (category) => {
-    if (category === "all"){
-      this.setState({ photocopy: [...this.state.photos]});
-    }else{
-      this.setState({ photocopy: [...this.state.photos.filter( photo =>
-        photo.category === category)]});
+    photos: [],
+    tabselect: {
+      tab: 'home'
     }
-    this.setTab('category')
-    document.title = "Categories | " + category
   }
 
-  // Select
-  getSelect = (category, id, psrc) => {
-    this.setState(prevState =>({
-      photoselect: {
-        ...prevState.photoselect,
-        id: id,
-        psrc: psrc,
-        category: category
-      }}))
-    this.setTab('select')
+  componentDidMount() {
+    this.setState({
+      photos: [...this.loadData]
+    });
   }
 
   // Set Tab
   setTab = (tab) => {
-    this.setState(prevState =>({
+
+    this.setState(prevState => ({
       tabselect: {
         ...prevState.tabselect,
         tab: tab
-      }}))
-    if(tab !== "category"){
-      this.setState({ photocopy: [...this.state.photos]});
-    }
+      }
+    }))
   }
 
   render() {
 
-    return (
-      <Router>
-        <div className="App">
-          <Header setTab={this.setTab} tabselect={this.state.tabselect} getCategory={this.getCategory}/>
-          <div className="container-fluid">
-          <Route exact path="/" render={props => (
-            <div>
+    return (<Router>
+      <Container fluid >
+        <Header setTab={this.setTab} />
+        <Col sm>
+          <Route exact="exact" path="/" render={props => (<div>
               <Helmet>
                 <title>Home | Recent</title>
               </Helmet>
-              <FilterHeader tabselect={this.state.tabselect} getCategory={this.getCategory}/>
               <React.Fragment>
-                <Photos photos={this.state.photos} getCategory={this.getCategory}
-                  getSelect={this.getSelect} tabselect={this.state.tabselect}/>
+                <Photos photos={this.state.photos}/>
               </React.Fragment>
-            </div>
-            )} />
-          <Route path="/categories/" render={props => (
-              <div>
-                <Helmet>
-                  <title>Categories | All</title>
-                </Helmet>
-                <FilterHeader tabselect={this.state.tabselect} getCategory={this.getCategory}/>
-                <React.Fragment>
-                  <Photos photos={this.state.photocopy} getCategory={this.getCategory}
-                    getSelect={this.getSelect} tabselect={this.state.tabselect} />
-                </React.Fragment>
-              </div>
-            )} />
-          <Route exact path="/select/:id" render={props => (
-            <div>
+            </div>)}/>
+          <Route exact="exact" path="/categories/:id" render={props => (<div>
+              <Helmet>
+                <title>Categories</title>
+              </Helmet>
+              <React.Fragment>
+                <Categories {...props} key={this.state.tabselect.tab}/>
+              </React.Fragment>
+            </div>)}/>
+          <Route exact="exact" path="/select/:id" render={props => (<div>
+
               <Helmet>
                 <title>Photo Select</title>
               </Helmet>
               <React.Fragment>
-                <PhotoSelect {...props} photos={this.state.photos}  />
+                <PhotoSelect {...props} tabselect={this.state.tabselect}/>
               </React.Fragment>
-            </div>
-            )} />
-          </div>
-          </div>
-      </Router>
-    );
+            </div>)}/>
+        </Col>
+      </Container>
+    </Router>);
   }
 }
 
