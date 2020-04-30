@@ -1,5 +1,6 @@
-import React, {Component} from 'react'
-import VideoItem from './VideoItem'
+import React, {Component, lazy} from 'react'
+
+const VideoItem = lazy(() => import('./VideoItem'));
 
 const API = process.env.REACT_APP_GOOGLE_API_KEY
 

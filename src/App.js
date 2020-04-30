@@ -1,12 +1,18 @@
-import React, {Component} from 'react';
-import {BrowserRouter as Router, Route} from 'react-router-dom';
-import Videos from './components/Videos';
-import Header from './components/layout/Header';
-import VideoSelect from './components/VideoSelect';
-import Categories from './components/Categories'
+import React, {Component, Suspense, lazy} from 'react';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import {Helmet} from 'react-helmet';
 import { Container, Col } from 'react-bootstrap';
 
+const Videos = lazy(() => import('./components/Videos'));
+const Header = lazy(() => import('./components/layout/Header'));
+const VideoSelect = lazy(() => import('./components/VideoSelect'));
+const Categories = lazy(() => import('./components/Categories'));
+
+const NoMatch = ({ location }) => (
+  <div>
+    <h3>404 Error! No match for <code>{location.pathname}</code></h3>
+  </div>
+)
 
 const API = process.env.REACT_APP_GOOGLE_API_KEY
 const channelID = "UCBY5hSLBKHpaVLo61cN7tJA"
@@ -64,39 +70,43 @@ class App extends Component {
   }
 
   render() {
-
     return (<Router>
-      <Container fluid >
-        <Header setTab={this.setTab} playlists={this.state.playlists} />
-        <Col sm>
-          <Route exact="exact" path="/" render={props => (<div>
-              <Helmet>
-                <title>Home | Recent</title>
-              </Helmet>
-              <React.Fragment>
-                <Videos videos={this.state.videos} />
-              </React.Fragment>
-            </div>)}/>
-          <Route exact="exact" path="/categories/:id" render={props => (<div>
-              <Helmet>
-                <title>Categories</title>
-              </Helmet>
-              <React.Fragment>
-                <Categories {...props} key={this.state.tabselect.tab} />
-              </React.Fragment>
-            </div>)}/>
-          <Route exact="exact" path="/select/:id" render={props => (<div>
-              <Helmet>
-                <title>Video Select</title>
-              </Helmet>
-              <React.Fragment>
-                <VideoSelect {...props} tabselect={this.state.tabselect} />
-              </React.Fragment>
-            </div>)}/>
-        </Col>
-      </Container>
-    </Router>);
-  }
+              <Suspense fallback={<div>Loading...</div>}>
+                <Container fluid >
+                  <Header setTab={this.setTab} playlists={this.state.playlists} />
+                  <Col sm>
+                    <Switch>
+                    <Route exact="exact" path="/" render={props => (<div>
+                        <Helmet>
+                          <title>Home | Recent</title>
+                        </Helmet>
+                        <React.Fragment>
+                          <Videos videos={this.state.videos} />
+                        </React.Fragment>
+                      </div>)}/>
+                    <Route exact="exact" path="/categories/:id" render={props => (<div>
+                        <Helmet>
+                          <title>Categories</title>
+                        </Helmet>
+                        <React.Fragment>
+                          <Categories {...props} key={this.state.tabselect.tab} />
+                        </React.Fragment>
+                      </div>)}/>
+                    <Route exact="exact" path="/select/:id" render={props => (<div>
+                        <Helmet>
+                          <title>Video Select</title>
+                        </Helmet>
+                        <React.Fragment>
+                          <VideoSelect {...props} tabselect={this.state.tabselect} />
+                        </React.Fragment>
+                      </div>)}/>
+                    <Route component={NoMatch} />
+                  </Switch>
+                  </Col>
+                </Container>
+              </Suspense>
+            </Router>);
+      }
 }
 
 export default App;
