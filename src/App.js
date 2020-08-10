@@ -34,7 +34,7 @@ class App extends Component {
   async componentDidMount(){
     const response = await fetch(finalURL);
     const data = await response.json();
-    // console.log("APP API called", data)
+    console.log(data, response)
     const videos = data.items.map(obj => obj = {
       id: obj.id.videoId,
       url: "https://www.youtube.com/watch?v="+obj.id.videoId,
@@ -47,7 +47,7 @@ class App extends Component {
 
     const responsep = await fetch(playURL);
     const datap = await responsep.json();
-    // console.log("Header API Called")
+    console.log(datap, responsep)
     const playlists = datap.items.map(obj => obj ={
       title: obj.snippet.title,
       id: obj.id
@@ -57,7 +57,6 @@ class App extends Component {
 
   }
 
-  // Set Tab
   setTab = (tab) => {
     this.setState(prevState => ({
       tabselect: {
@@ -74,7 +73,7 @@ class App extends Component {
                   <Header setTab={this.setTab} playlists={this.state.playlists} />
                   <Col sm>
                     <Switch>
-                    <Route exact="exact" path="/" render={props => (<div>
+                    <Route exact path="/" render={() => (<div>
                         <Helmet>
                           <title>Home | Recent</title>
                         </Helmet>
@@ -82,7 +81,7 @@ class App extends Component {
                           <Videos videos={this.state.videos} />
                         </React.Fragment>
                       </div>)}/>
-                    <Route exact="exact" path="/categories/:id" render={props => (<div>
+                    <Route exact path="/categories/:id" render={props => (<div>
                         <Helmet>
                           <title>Categories</title>
                         </Helmet>
@@ -90,7 +89,7 @@ class App extends Component {
                           <Categories {...props} key={this.state.tabselect.tab} />
                         </React.Fragment>
                       </div>)}/>
-                    <Route exact="exact" path="/select/:id" render={props => (<div>
+                    <Route exact path="/select/:id" render={props => (<div>
                         <Helmet>
                           <title>Video Select</title>
                         </Helmet>

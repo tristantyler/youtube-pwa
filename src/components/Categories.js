@@ -67,8 +67,6 @@ export class Categories extends Component {
               const response = await fetch(url);
               const data = await response.json();
 
-              // console.log("Category API called: Other", this.state.playlists[i].title)
-
               const videos = data.items.map(obj => obj = {
                 id:obj.snippet.resourceId.videoId,
                 url: "https://www.youtube.com/watch?v="+obj.snippet.resourceId.videoId,
