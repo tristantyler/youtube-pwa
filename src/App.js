@@ -1,7 +1,7 @@
-import React, {Component, Suspense, lazy} from 'react';
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
-import {Helmet} from 'react-helmet';
-import { Container, Col } from 'react-bootstrap';
+import React, { Component, lazy, Suspense } from 'react';
+import { Col, Container } from 'react-bootstrap';
+import { Helmet } from 'react-helmet';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 const Videos = lazy(() => import('./components/Videos'));
 const Header = lazy(() => import('./components/layout/Header'));
@@ -32,8 +32,7 @@ class App extends Component {
   }
 
   async componentDidMount(){
-    const url = finalURL;
-    const response = await fetch(url);
+    const response = await fetch(finalURL);
     const data = await response.json();
     // console.log("APP API called", data)
     const videos = data.items.map(obj => obj = {
@@ -46,8 +45,7 @@ class App extends Component {
     this.setState({videos})
     localStorage.setItem('videos', JSON.stringify(videos))
 
-    const urlp = playURL;
-    const responsep = await fetch(urlp);
+    const responsep = await fetch(playURL);
     const datap = await responsep.json();
     // console.log("Header API Called")
     const playlists = datap.items.map(obj => obj ={
